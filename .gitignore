@@ -1,0 +1,4 @@
+.idea/
+out/
+db/people.json
+db/events.json

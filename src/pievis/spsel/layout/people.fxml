@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.paint.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane id="AnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="pievis.spsel.controller.PeopleController">
+  <children>
+    <SplitPane dividerPositions="0.449874686716792" focusTraversable="true" orientation="HORIZONTAL" prefHeight="600.0" prefWidth="800.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <items>
+        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
+          <children>
+            <VBox id="VBox" alignment="TOP_CENTER" prefHeight="598.0" spacing="5.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="10.0">
+              <children>
+                <Label text="Person Details">
+                  <font>
+                    <Font name="System Bold" size="15.0" fx:id="x1" />
+                  </font>
+                </Label>
+                <GridPane prefHeight="186.0" prefWidth="305.0">
+                  <children>
+                    <Label text="First Name" GridPane.columnIndex="0" GridPane.halignment="CENTER" GridPane.rowIndex="0" />
+                    <Label text="Last Name" GridPane.columnIndex="0" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
+                    <Label fx:id="lastNameLabel" text="" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                    <Label fx:id="birthdayLabel" text="" textAlignment="LEFT" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                    <Label fx:id="firstNameLabel" text="" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+                    <Label text="Birthday" GridPane.columnIndex="0" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
+                  </children>
+                  <columnConstraints>
+                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="400.0" minWidth="10.0" prefWidth="112.0" />
+                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="657.0" minWidth="10.0" prefWidth="193.0" />
+                  </columnConstraints>
+                  <rowConstraints>
+                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  </rowConstraints>
+                </GridPane>
+                <VBox id="VBox" alignment="CENTER" spacing="5.0">
+                  <children>
+                    <Separator prefWidth="200.0" />
+                    <HBox id="HBox" alignment="CENTER_RIGHT" spacing="5.0">
+                      <children>
+                        <Button fx:id="newButton" mnemonicParsing="false" onAction="#newButtonPressed" text="New" />
+                        <Button fx:id="editButton" mnemonicParsing="false" onAction="#editButtonPressed" text="Edit" />
+                        <Button fx:id="deleteButton" mnemonicParsing="false" onAction="#deleteButtonPressed" text="Delete" />
+                      </children>
+                      <padding>
+                        <Insets bottom="10.0" right="5.0" top="10.0" />
+                      </padding>
+                    </HBox>
+                  </children>
+                </VBox>
+              </children>
+            </VBox>
+          </children>
+        </AnchorPane>
+        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
+          <children>
+            <VBox prefHeight="-1.0" prefWidth="-1.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="10.0">
+              <children>
+                <Label font="$x1" text="People List">
+                  <VBox.margin>
+                    <Insets left="10.0" />
+                  </VBox.margin>
+                </Label>
+                <HBox id="HBox" alignment="BOTTOM_RIGHT" spacing="5.0">
+                  <children>
+                    <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true" smooth="true">
+                      <image>
+                        <Image url="@../res/ico-search.png" />
+                      </image>
+                    </ImageView>
+                    <TextField fx:id="searchField" prefWidth="200.0" />
+                  </children>
+                  <padding>
+                    <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                  </padding>
+                </HBox>
+                <Separator prefWidth="200.0" />
+                <ListView fx:id="peopleListView" prefHeight="-1.0" prefWidth="-1.0" />
+              </children>
+            </VBox>
+          </children>
+        </AnchorPane>
+      </items>
+    </SplitPane>
+  </children>
+</AnchorPane>
