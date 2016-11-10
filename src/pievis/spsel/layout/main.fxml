@@ -8,16 +8,12 @@
 
 <BorderPane id="root" fx:id="borderPane" prefHeight="600.0" prefWidth="800.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="pievis.spsel.controller.MainController">
   <center>
-    <Pane prefHeight="200.0" prefWidth="200.0">
-      <children>
-        <Label text="CONTAINER" />
-      </children>
-    </Pane>
+    <Pane prefHeight="200.0" prefWidth="200.0" />
   </center>
   <top>
     <MenuBar fx:id="menuBar" focusTraversable="false">
       <menus>
-        <Menu id="eventsMenu" mnemonicParsing="false" text="Events">
+        <Menu id="eventsMenu" mnemonicParsing="false" text="Meetings">
           <items>
             <MenuItem id="eventsListMenuItem" mnemonicParsing="false" onAction="#openEventsListView" text="List" />
             <MenuItem id="eventsNewMenuItem" mnemonicParsing="false" onAction="#openEventsNewView" text="New" />

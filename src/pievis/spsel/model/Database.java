@@ -38,4 +38,10 @@ public interface Database {
      */
     void deletePerson(Person person);
 
+    List<Meeting> getMeetings();
+    Meeting getMeeting(int id);
+    void deleteMeeting(int id);
+    int insertMeeting(Meeting meeting);
+    void updateMeeting(Meeting meeting);
+
 }

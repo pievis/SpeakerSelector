@@ -20,17 +20,18 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class FilePersistentDb implements Database {
 
     private final static String PEOPLE_FILE_NAME = "people.json";
-    private final static String EVENTS_FILE_NAME = "events.json";
+    private final static String MEETINGS_FILE_NAME = "meetings.json";
 
     //
     String peopleFilePath;
-    String eventsFilePath;
+    String meetingsFilePath;
 
     //
     String dirPath;
     Map<Integer, Person> peopleMap;
     AtomicInteger peopleAI;
-    //TODO events
+    Map<Integer, Meeting> meetingsMap;
+    AtomicInteger meetingsAI;
 
     /**
      * @param dirPath path to the directory that will hold the database
@@ -40,14 +41,17 @@ public class FilePersistentDb implements Database {
         this.dirPath = dirPath;
         new File(dirPath).mkdirs();
         peopleFilePath = getFilePath(PEOPLE_FILE_NAME);
-        eventsFilePath = getFilePath(EVENTS_FILE_NAME);
+        meetingsFilePath = getFilePath(MEETINGS_FILE_NAME);
         new File(peopleFilePath).createNewFile();
-        new File(eventsFilePath).createNewFile();
-        //
+        new File(meetingsFilePath).createNewFile();
+        //load people in memory
         peopleMap = new HashMap<Integer, Person>();
         peopleAI = new AtomicInteger();
         loadPeople();
-        //TODO load events
+        //load meetings / events in memory
+        meetingsAI = new AtomicInteger();
+        meetingsMap = new HashMap<Integer, Meeting>();
+        loadMeetings();
     }
 
     @Override
@@ -90,6 +94,46 @@ public class FilePersistentDb implements Database {
         peopleMap.remove(id);
         savePeopleState();
     }
+
+    @Override
+    public List<Meeting> getMeetings() {
+        if (meetingsMap == null)
+            return null;
+        return new ArrayList<Meeting>(meetingsMap.values());
+    }
+
+    @Override
+    public Meeting getMeeting(int id) {
+        if (meetingsMap == null)
+            return null;
+        return meetingsMap.get(id);
+    }
+
+    @Override
+    public void deleteMeeting(int id) {
+        meetingsMap.remove(id);
+        saveMeetingsState();
+    }
+
+    @Override
+    public void updateMeeting(Meeting meeting) {
+        int id = meeting.getId();
+        meetingsMap.put(id, meeting);
+        saveMeetingsState();
+    }
+
+    @Override
+    public int insertMeeting(Meeting meeting) {
+        if (meetingsMap == null) {
+            meetingsMap = new HashMap<Integer, Meeting>();
+        }
+        int id = meetingsAI.incrementAndGet();
+        meeting.setId(id);
+
+        meetingsMap.put(id, meeting);
+        saveMeetingsState();
+        return id;
+    }
     //
 
     private String getFilePath(String fileName) {
@@ -102,16 +146,15 @@ public class FilePersistentDb implements Database {
      * @return list of people.
      */
     private void loadPeople() {
-        try {
-            String jsonStr = SystemUtils.readFileContents(peopleFilePath);
-            Type listType = new TypeToken<ArrayList<Person>>() {
-            }.getType();
-            List<Person> list = new Gson().fromJson(jsonStr, listType);
-            mapPeopleFromList(list);
-        } catch (Exception e) {
-            e.printStackTrace();
-            Config.get().getLogger().error("Error while reading " + peopleFilePath);
-        }
+        Type listType = new TypeToken<ArrayList<Person>>() {}.getType();
+        List<Person> list = getJsonData(peopleFilePath, listType);
+        mapPeopleFromList(list);
+    }
+
+    private void loadMeetings() {
+        Type listType = new TypeToken<ArrayList<Meeting>>() {}.getType();
+        List<Meeting> list = getJsonData(meetingsFilePath, listType);
+        mapMeetingsFromList(list);
     }
 
     private void mapPeopleFromList(List<Person> list) {
@@ -129,18 +172,58 @@ public class FilePersistentDb implements Database {
         peopleAI.set(maxId);
     }
 
+    private void mapMeetingsFromList(List<Meeting> list) {
+        meetingsMap.clear();
+        int maxId = 0;
+        if (list != null) {
+            for (Meeting m : list) {
+                meetingsMap.put(m.getId(), m);
+                int idVal = m.getId();
+                if (idVal > maxId) {
+                    maxId = idVal;
+                }
+            }
+        }
+        meetingsAI.set(maxId);
+    }
+
     private void savePeopleState() {
         List<Person> list = new ArrayList<Person>(peopleMap.values());
+        saveJsonData(list, peopleFilePath);
+    }
+
+    private void saveMeetingsState() {
+        List<Meeting> list = new ArrayList<Meeting>(meetingsMap.values());
+        saveJsonData(list, meetingsFilePath);
+    }
+
+    /**
+     * Saves the list into a file using JSON standard
+     *
+     * @param list
+     * @param filePath
+     */
+    private void saveJsonData(List list, String filePath) {
         String json = new Gson().toJson(list);
         try {
-            SystemUtils.writeFileContents(peopleFilePath, json);
+            SystemUtils.writeFileContents(filePath, json);
         } catch (Exception e) {
             e.printStackTrace();
-            Config.get().getLogger().error("Error while writing to file " + peopleFilePath);
+            Config.get().getLogger().error("Error while writing to file " + filePath);
         }
     }
 
-
+    private <T> List<T> getJsonData(String filePath, Type listType) {
+        try {
+            String jsonStr = SystemUtils.readFileContents(filePath);
+            List<T> list = new Gson().fromJson(jsonStr, listType);
+            return list;
+        } catch (Exception e) {
+            e.printStackTrace();
+            Config.get().getLogger().error("Error while reading " + filePath);
+        }
+        return null;
+    }
 
     //Class tester function
     public static void main(String args[]) {
@@ -154,7 +237,7 @@ public class FilePersistentDb implements Database {
         }
         if (db == null)
             return;
-/*
+        /*
         Person p1 = new Person();
         p1.setFirstName("sergio");
         p1.setLastName("montagna");
@@ -166,12 +249,23 @@ public class FilePersistentDb implements Database {
         db.insertPerson(p2);
         */
         Logger logger = conf.getLogger();
+        Meeting m = new Meeting();
         List<Person> list = db.getPeople();
+        List<Integer> lp = new ArrayList<>();
+        List<Integer> la = new ArrayList<>();
         for (Person p : list) {
             logger.info(p.getFullName() + " " + p.getId());
+            lp.add(p.getId());
+            if(p.getId() % 2 == 0){
+                la.add(p.getId());
+            }
         }
-
-        logger.info(" ID 1 = " + db.getPerson(1).getFullName());
+        m.setParticipants(lp);
+        m.setAbsents(la);
+        //logger.info(" ID 1 = " + db.getPerson(1).getFullName());
+        m.setDate(new Date());
+        m.setTitle("Meeting test");
+        db.insertMeeting(m);
 
     }
 }
