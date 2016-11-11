@@ -7,17 +7,24 @@
 <?import javafx.scene.paint.*?>
 
 <BorderPane id="root" fx:id="borderPane" prefHeight="600.0" prefWidth="800.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="pievis.spsel.controller.MainController">
+  <bottom>
+    <AnchorPane maxHeight="-Infinity" prefHeight="25.0" prefWidth="-1.0" style="-fx-background-color: #d9d9d9;" BorderPane.alignment="CENTER_RIGHT">
+      <children>
+        <ProgressBar fx:id="loadingBar" prefWidth="200.0" progress="0.0" visible="true" AnchorPane.bottomAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0" />
+      </children>
+    </AnchorPane>
+  </bottom>
   <center>
-    <Pane prefHeight="200.0" prefWidth="200.0" />
+    <Pane prefHeight="600.0" prefWidth="800.0" />
   </center>
   <top>
     <MenuBar fx:id="menuBar" focusTraversable="false">
       <menus>
         <Menu id="eventsMenu" mnemonicParsing="false" text="Meetings">
           <items>
-            <MenuItem id="eventsListMenuItem" mnemonicParsing="false" onAction="#openEventsListView" text="List" />
-            <MenuItem id="eventsNewMenuItem" mnemonicParsing="false" onAction="#openEventsNewView" text="New" />
-            <MenuItem id="eventsNextDueMenuItem" mnemonicParsing="false" onAction="#openEventsNextDueView" text="Next Due" />
+            <MenuItem id="eventsListMenuItem" mnemonicParsing="false" onAction="#openMeetingsListView" text="List" />
+            <MenuItem id="eventsNewMenuItem" mnemonicParsing="false" onAction="#openMeetingsNewView" text="New" />
+            <MenuItem id="eventsNextDueMenuItem" mnemonicParsing="false" onAction="#openMeetingsNextDueView" text="Next Due" />
           </items>
         </Menu>
         <Menu id="PeopleMenu" mnemonicParsing="false" text="People">

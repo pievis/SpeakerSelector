@@ -20,7 +20,7 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws Exception {
         Parent root = FXMLLoader.load(getClass().getResource(MAIN_LAYOUT_PATH));
         primaryStage.setTitle(APP_TITLE);
-        primaryStage.setScene(new Scene(root, 800, 600));
+        primaryStage.setScene(new Scene(root, 850, 760));
         this.primaryStage = primaryStage;
         primaryStage.show();
     }
@@ -35,7 +35,7 @@ public class Main extends Application {
     }
 
     static void configApp() {
-        Config conf = Config.get();
+        Config conf = Config.instance();
         try {
             Database db = new FilePersistentDb(PFDB_DIR_PATH);
             conf.setDatabase(db);

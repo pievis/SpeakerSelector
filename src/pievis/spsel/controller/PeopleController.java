@@ -12,18 +12,15 @@ import javafx.scene.control.*;
 import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.util.Callback;
 import pievis.spsel.Config;
 import pievis.spsel.Main;
 import pievis.spsel.model.Database;
 import pievis.spsel.model.Person;
 import pievis.utils.SystemUtils;
-import sample.Controller;
 
 import java.io.IOException;
 import java.net.URL;
 import java.util.List;
-import java.util.Observable;
 import java.util.ResourceBundle;
 
 /**
@@ -31,12 +28,8 @@ import java.util.ResourceBundle;
  */
 public class PeopleController implements Initializable {
 
-
-    @FXML
     public Label lastNameLabel;
-    @FXML
     public Label birthdayLabel;
-    @FXML
     public Label firstNameLabel;
     public TextField searchField;
     public ListView<Person> peopleListView;
@@ -52,7 +45,7 @@ public class PeopleController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        db = Config.get().getDatabase();
+        db = Config.instance().getDatabase();
         initPeopleList();
         setupSearchField();
         clearSelection();
@@ -72,7 +65,7 @@ public class PeopleController implements Initializable {
                         log("selected  " + p.getFullName());
                         setDetailsView(p);
                     } else {
-                        Config.get().getLogger().error("selectedItemHandler - Missing value in Observable");
+                        Config.instance().getLogger().error("selectedItemHandler - Missing value in Observable");
                     }
                 });
     }
@@ -189,6 +182,6 @@ public class PeopleController implements Initializable {
     }
 
     private void log(String text) {
-        Config.get().getLogger().info(text);
+        Config.instance().getLogger().info(text);
     }
 }

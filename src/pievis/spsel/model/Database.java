@@ -33,6 +33,12 @@ public interface Database {
     void updatePerson(Person person);
 
     /**
+     * Returns the list of people for the specified ids
+     * @param ids
+     */
+    List<Person> getPersonByIds(List<Integer> ids);
+
+    /**
      * Removes a person from the db based on its id
      * @param person
      */

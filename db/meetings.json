@@ -1,1 +1,2 @@
-[{"id":1,"partecipants":[2,3,4,5,6,7],"absents":[2,4,6],"date":"Nov 10, 2016 2:19:12 PM"}]
+[{"id":1,"absents":[2,6],"participants":[2,4,6],"date":"Nov 10, 2016 2:19:12 PM","title":"Test"},
+  {"id":2,"participants":[2,3,4,5,6,7],"absents":[2,4,6],"date":"Nov 11, 2016 3:57:19 PM","title":"Meeting test"}]

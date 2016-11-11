@@ -54,6 +54,8 @@ public class FilePersistentDb implements Database {
         loadMeetings();
     }
 
+    //Person
+
     @Override
     public List<Person> getPeople() {
         if (peopleMap == null)
@@ -94,6 +96,23 @@ public class FilePersistentDb implements Database {
         peopleMap.remove(id);
         savePeopleState();
     }
+
+    @Override
+    public List<Person> getPersonByIds(List<Integer> ids) {
+        if(ids != null){
+            List<Person> list = new ArrayList<>();
+            for(Integer id : ids){
+                Person p = peopleMap.get(id);
+                if(p != null){
+                    list.add(p);
+                }
+            }
+            return list;
+        }
+        return null;
+    }
+
+    //Meeting
 
     @Override
     public List<Meeting> getMeetings() {
@@ -209,7 +228,7 @@ public class FilePersistentDb implements Database {
             SystemUtils.writeFileContents(filePath, json);
         } catch (Exception e) {
             e.printStackTrace();
-            Config.get().getLogger().error("Error while writing to file " + filePath);
+            Config.instance().getLogger().error("Error while writing to file " + filePath);
         }
     }
 
@@ -220,14 +239,14 @@ public class FilePersistentDb implements Database {
             return list;
         } catch (Exception e) {
             e.printStackTrace();
-            Config.get().getLogger().error("Error while reading " + filePath);
+            Config.instance().getLogger().error("Error while reading " + filePath);
         }
         return null;
     }
 
     //Class tester function
     public static void main(String args[]) {
-        Config conf = Config.get();
+        Config conf = Config.instance();
         Database db = null;
         try {
             db = new FilePersistentDb("db");

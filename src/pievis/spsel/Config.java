@@ -14,7 +14,7 @@ public class Config {
 
     static Config instance = null;
 
-    public static Config get() {
+    public static Config instance() {
         if (instance == null) {
             instance = new Config();
         }
