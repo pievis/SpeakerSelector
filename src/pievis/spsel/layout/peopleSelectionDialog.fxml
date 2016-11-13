@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.paint.*?>
+
+<AnchorPane
+        fx:controller="pievis.spsel.controller.PeopleSelectionController"
+        id="AnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="300.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2">
+  <children>
+    <VBox id="VBox" alignment="CENTER" prefHeight="500.0" prefWidth="300.0" spacing="5.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <children>
+        <Label prefWidth="286.0" text="People Selection" />
+        <HBox id="HBox" alignment="BOTTOM_RIGHT" prefWidth="291.0" spacing="5.0">
+          <children>
+            <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true" smooth="true">
+              <image>
+                <Image url="@../res/ico-search.png" />
+              </image>
+            </ImageView>
+            <TextField id="searchField" fx:id="searchTextField" prefWidth="200.0" />
+          </children>
+          <padding>
+            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+          </padding>
+        </HBox>
+        <ListView fx:id="peopleListView" prefHeight="380.0" prefWidth="200.0" />
+        <Button defaultButton="true" mnemonicParsing="false" onAction="#completeSelection" text="Add people" />
+      </children>
+    </VBox>
+  </children>
+</AnchorPane>

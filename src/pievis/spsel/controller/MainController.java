@@ -3,17 +3,20 @@ package pievis.spsel.controller;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import pievis.spsel.Config;
 
 import java.io.IOException;
+import java.net.URL;
+import java.util.ResourceBundle;
 
 /**
  * Created by Pievis on 05/11/2016.
  */
-public class MainController {
+public class MainController implements Initializable{
 
     //private MenuBar menuBar;
     @FXML
@@ -39,7 +42,17 @@ public class MainController {
         setLoadingProgress(1);
     }
 
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        try {
+            openMeetingsListView(new ActionEvent());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     public void openMeetingsNewView(ActionEvent actionEvent) {
+        //TODO
     }
 
     public void openMeetingsNextDueView(ActionEvent actionEvent) {

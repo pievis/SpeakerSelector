@@ -1,5 +1,6 @@
 package pievis.spsel.model;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -52,5 +53,25 @@ public class Meeting {
 
     public void setDate(Date date) {
         this.date = date;
+    }
+
+    public void addAbsent(Integer personId){
+        if(absents == null)
+            setAbsents(new ArrayList<Integer>());
+        absents.add(personId);
+    }
+
+    public void addParticipant(Integer personId){
+        if(participants == null)
+            setParticipants(new ArrayList<Integer>());
+        participants.add(personId);
+    }
+
+    public boolean removeAbsent(Integer personId){
+        return absents.remove(personId);
+    }
+
+    public boolean removeParticipant(Integer personId){
+        return participants.remove(personId);
     }
 }
