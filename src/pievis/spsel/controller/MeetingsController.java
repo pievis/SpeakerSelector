@@ -12,7 +12,6 @@ import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.control.cell.TextFieldListCell;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
@@ -25,10 +24,7 @@ import pievis.spsel.model.Person;
 import pievis.utils.SystemUtils;
 
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.ResourceBundle;
+import java.util.*;
 
 /**
  * Created by Pievis on 11/11/2016.
@@ -44,7 +40,6 @@ public class MeetingsController implements Initializable {
     public Label evtMsgLabel;
     public TableView meetingsTableView;
     public Button newBtn;
-    public Button editBtn;
     public Button deleteBtn;
     public Button selectBtn;
     public TableColumn<Meeting, String> meetTitleColumn;
@@ -72,7 +67,6 @@ public class MeetingsController implements Initializable {
         initPeopleLists();
         setParticipantControl(false);
         initMeetingsTableView();
-        //TODO fetch the next due and work with it if this action is set
     }
 
     private void initPeopleLists() {
@@ -139,20 +133,6 @@ public class MeetingsController implements Initializable {
                 }
             }
         });
-        /*meetDateColumn.setCellFactory(
-                column -> {
-            return new TableCell<Meeting, Date>() {
-                @Override
-                protected void updateItem(Date item, boolean empty) {
-                    super.updateItem(item, empty);
-                    if (!empty) {
-                        setText(SystemUtils.formatDate(item));
-                    } else {
-                        setText(null);
-                    }
-                }
-            };
-        });*/
 
         meetingsData = FXCollections.observableArrayList(meetings);
         //sort it before showing (desc)
@@ -172,8 +152,6 @@ public class MeetingsController implements Initializable {
         });
 
         meetingsTableView.setEditable(true); //make the user update the event data from the table
-
-
         setupMeetingsSearchField();
     }
 
@@ -209,14 +187,56 @@ public class MeetingsController implements Initializable {
             meetingTitleLabel.setText(meeting.getTitle());
             String dateStr = SystemUtils.formatDate(meeting.getDate());
             meetingDateLabel.setText(dateStr);
-            editBtn.setDisable(false);
             selectBtn.setDisable(false);
+            String selectedLbl = "-";
+            if (meeting.getState() == Meeting.STATE_PERSON_SELECTED
+                    && meeting.getSelectedPersonId() != null) {
+                Person p = db.getPerson(meeting.getSelectedPersonId());
+                if (p != null) {
+                    selectedLbl = p.getFullName();
+                }
+            }
+            selectedMeetingLabel.setText(selectedLbl);
         } else {
-            editBtn.setDisable(true);
+            meetingsTableView.getSelectionModel().clearSelection();
             selectBtn.setDisable(true);
         }
+        setStateLabel(meeting);
     }
 
+    private void setStateLabel(Meeting meeting) {
+        String lbl = "";
+        if (meeting != null) {
+            if (meeting.getState() == Meeting.STATE_PERSON_SELECTED
+                    && meeting.getSelectedPersonId() != null) {
+                Person p = db.getPerson(meeting.getSelectedPersonId());
+                if (p != null) {
+                    lbl = "The person selected for the meeting is: " + p.getFullName();
+                }
+            } else {
+                lbl = "No person has been selected for this meeting yet.";
+            }
+        }
+        evtMsgLabel.setText(lbl);
+    }
+
+    public void deleteSelectedMeeting(ActionEvent actionEvent) {
+        if (selectedMeeting != null) {
+            //Show a confirm dialog
+            Optional<ButtonType> result = showAndWaitConfirm("Delete the selected data?",
+                    "All the information about the meeting will be removed.");
+            if (result.get() == ButtonType.OK) {
+                db.deleteMeeting(selectedMeeting.getId());
+                meetingsData.remove(selectedMeeting);
+                selectedMeeting = null;
+                meetingsTableView.getSelectionModel().clearSelection();
+                //update the view with no selection
+                setParticipantControl(false);
+                participantsListView.setItems(FXCollections.observableArrayList());
+                absentsListView.setItems(FXCollections.observableArrayList());
+            }
+        }
+    }
 
     //participants management
     private void setupParticipants(Meeting meeting) {
@@ -379,10 +399,87 @@ public class MeetingsController implements Initializable {
         db.updateMeeting(selectedMeeting);
     }
 
+
+    //Selection process
+    public void onSelectBtnPressed(ActionEvent actionEvent) {
+        if (participantsListView.getItems().size() > 0) {
+            if (selectedMeeting.getState() == Meeting.STATE_PERSON_UNSELECTED) {
+                selectRandomForMeeting();
+            } else {
+                Optional<ButtonType> res = showAndWaitConfirm("Someone has been selected.",
+                        "Would you like to retake?");
+                if (res.get() == ButtonType.OK) {
+                    selectRandomForMeeting();
+                }
+            }
+        }
+    }
+
+    private void selectRandomForMeeting() {
+        List<Person> set = new ArrayList(participantsListView.getItems());
+        List<Person> absents = absentsListView.getItems();
+        set.removeAll(absents);
+        if (set.size() > 0) {
+            //select randomly
+            Random rnd = new Random();
+            int i = rnd.nextInt(set.size());
+            Person p = set.get(i);
+            //complete dialog
+            ButtonType buttonTypeOk = new ButtonType("Ok");
+            ButtonType buttonTypeRetake = new ButtonType("Retake");
+            ButtonType buttonTypeCancel = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("Selection complete");
+            alert.setHeaderText(p.getFullName() + " selected!");
+            alert.setContentText("Are you ok with the choice?");
+            alert.getButtonTypes().setAll(buttonTypeOk, buttonTypeRetake, buttonTypeCancel);
+            Optional<ButtonType> result = alert.showAndWait();
+            if (result.get() == buttonTypeOk) {
+                setSelectedPersonForMeeting(p);
+            }
+            if (result.get() == buttonTypeRetake) {
+                selectRandomForMeeting();
+            }
+        }
+    }
+
+    void setSelectedPersonForMeeting(Person person) {
+        selectedMeeting.setSelectedPersonId(person.getId());
+        selectedMeeting.setState(Meeting.STATE_PERSON_SELECTED);
+        db.updateMeeting(selectedMeeting);
+        setMeetingDetails(selectedMeeting);
+    }
+
+    public void selectNextDue() {
+        log("Selecting next due...");
+        Date now = new Date();
+        long minTime = Long.MAX_VALUE;
+        Meeting sel = null;
+        for (Meeting m : meetingsData) {
+            if (now.before(m.getDate())) {
+                long time = m.getDate().getTime() - now.getTime();
+                if (time < minTime) {
+                    sel = m;
+                    minTime = time;
+                }
+            }
+        }
+        if (sel != null) {
+//            log("Selected for date " + sel.getDate());
+            meetingsTableView.getSelectionModel().select(sel);
+        }
+    }
+
     //
     private void log(String text) {
         Config.instance().getLogger().info(text);
     }
 
-
+    private Optional<ButtonType> showAndWaitConfirm(String headerText, String contentText) {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Confirmation Dialog");
+        alert.setHeaderText(headerText);
+        alert.setContentText(contentText);
+        return alert.showAndWait();
+    }
 }

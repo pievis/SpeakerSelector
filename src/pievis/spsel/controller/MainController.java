@@ -4,6 +4,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
@@ -51,11 +52,16 @@ public class MainController implements Initializable{
         }
     }
 
-    public void openMeetingsNewView(ActionEvent actionEvent) {
-        //TODO
-    }
-
-    public void openMeetingsNextDueView(ActionEvent actionEvent) {
+    public void openMeetingsNextDueView(ActionEvent actionEvent) throws IOException {
+        setLoadingProgress(0.2);
+        setMainView(MEETINGS_LAYOUT_PATH);
+        if (controllerRef != null
+                && controllerRef.getClass().equals(MeetingsController.class)) {
+            setLoadingProgress(0.5);
+            MeetingsController controller = (MeetingsController) controllerRef;
+            controller.selectNextDue();
+        }
+        setLoadingProgress(1);
     }
 
     public void openPeopleListView(ActionEvent actionEvent) throws IOException {
@@ -77,6 +83,8 @@ public class MainController implements Initializable{
     }
 
     public void openAboutView(ActionEvent actionEvent) {
+        infoBox("Author: Pierluigi Montagna",
+                "About the author", "http://randomguydev.com/");
     }
 
     /**
@@ -110,5 +118,14 @@ public class MainController implements Initializable{
 
     private void log(String text) {
         Config.instance().getLogger().info(text);
+    }
+
+    public static void infoBox(String infoMessage, String titleBar, String headerMessage)
+    {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(titleBar);
+        alert.setHeaderText(headerMessage);
+        alert.setContentText(infoMessage);
+        alert.showAndWait();
     }
 }

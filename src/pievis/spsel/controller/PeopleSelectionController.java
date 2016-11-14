@@ -32,6 +32,8 @@ public class PeopleSelectionController implements Initializable {
 
     public TextField searchTextField;
     public ListView peopleListView;
+    public TextField firstNameTextField;
+    public TextField lastNameTextField;
 
     private Database db;
     private ObservableList<Person> peopleData;
@@ -140,6 +142,35 @@ public class PeopleSelectionController implements Initializable {
 
     public void setDialogStage(Stage dialogStage) {
         this.dialogStage = dialogStage;
+    }
+
+    //Quickly add a new person to the system
+    public void addNewPerson(ActionEvent actionEvent) {
+        String name = firstNameTextField.getText();
+        boolean isValid = true;
+        if(name != null && name.length() > 1){
+            firstNameTextField.setStyle("-fx-border-color: white;");
+        }else{
+            firstNameTextField.setStyle("-fx-border-color: #df9797; -fx-border-width: 2px;");
+            isValid = false;
+        }
+
+        String surname = lastNameTextField.getText();
+        if(surname != null && surname.length() > 1){
+            lastNameTextField.setStyle("-fx-border-color: white;");
+        }else{
+            lastNameTextField.setStyle("-fx-border-color: #df9797; -fx-border-width: 2px;");
+            isValid = false;
+        }
+
+        if(isValid){
+            Person p = new Person();
+            p.setFirstName(name);
+            p.setLastName(surname);
+            int id = db.insertPerson(p);
+            p.setId(id);
+            peopleData.add(p);
+        }
     }
 
     //

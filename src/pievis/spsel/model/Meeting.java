@@ -9,11 +9,16 @@ import java.util.List;
  */
 public class Meeting {
 
+    public final static int STATE_PERSON_SELECTED = 1;
+    public final static int STATE_PERSON_UNSELECTED = 0;
+
     int id;
     List<Integer> participants;
     List<Integer> absents;
     Date date;
     String title;
+    Integer state = STATE_PERSON_UNSELECTED;
+    Integer selectedPersonId;
 
     public String getTitle() {
         return title;
@@ -73,5 +78,21 @@ public class Meeting {
 
     public boolean removeParticipant(Integer personId){
         return participants.remove(personId);
+    }
+
+    public Integer getState() {
+        return state;
+    }
+
+    public void setState(Integer state) {
+        this.state = state;
+    }
+
+    public Integer getSelectedPersonId() {
+        return selectedPersonId;
+    }
+
+    public void setSelectedPersonId(Integer selectedPersonId) {
+        this.selectedPersonId = selectedPersonId;
     }
 }

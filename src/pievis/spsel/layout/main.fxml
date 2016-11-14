@@ -23,7 +23,6 @@
         <Menu id="eventsMenu" mnemonicParsing="false" text="Meetings">
           <items>
             <MenuItem id="eventsListMenuItem" mnemonicParsing="false" onAction="#openMeetingsListView" text="List" />
-            <MenuItem id="eventsNewMenuItem" mnemonicParsing="false" onAction="#openMeetingsNewView" text="New" />
             <MenuItem id="eventsNextDueMenuItem" mnemonicParsing="false" onAction="#openMeetingsNextDueView" text="Next Due" />
           </items>
         </Menu>

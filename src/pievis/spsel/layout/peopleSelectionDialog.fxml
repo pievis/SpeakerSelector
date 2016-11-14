@@ -8,11 +8,9 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.paint.*?>
 
-<AnchorPane
-        fx:controller="pievis.spsel.controller.PeopleSelectionController"
-        id="AnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="300.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2">
+<AnchorPane id="AnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="-1.0" prefWidth="300.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="pievis.spsel.controller.PeopleSelectionController">
   <children>
-    <VBox id="VBox" alignment="CENTER" prefHeight="500.0" prefWidth="300.0" spacing="5.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+    <VBox id="VBox" alignment="CENTER" prefHeight="-1.0" prefWidth="300.0" spacing="5.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
       <children>
         <Label prefWidth="286.0" text="People Selection" />
         <HBox id="HBox" alignment="BOTTOM_RIGHT" prefWidth="291.0" spacing="5.0">
@@ -29,7 +27,22 @@
           </padding>
         </HBox>
         <ListView fx:id="peopleListView" prefHeight="380.0" prefWidth="200.0" />
-        <Button defaultButton="true" mnemonicParsing="false" onAction="#completeSelection" text="Add people" />
+        <HBox alignment="CENTER" prefHeight="-1.0" prefWidth="200.0">
+          <children>
+            <TextField fx:id="firstNameTextField" prefWidth="-1.0" promptText="first name" />
+            <TextField fx:id="lastNameTextField" prefWidth="-1.0" promptText="last name" />
+            <Button mnemonicParsing="false" prefWidth="120.0" text="New" onAction="#addNewPerson"/>
+          </children>
+          <padding>
+            <Insets left="5.0" right="5.0" />
+          </padding>
+        </HBox>
+        <Separator prefWidth="200.0" />
+        <Button defaultButton="true" mnemonicParsing="false" onAction="#completeSelection" text="Add people">
+          <VBox.margin>
+            <Insets bottom="10.0" />
+          </VBox.margin>
+        </Button>
       </children>
     </VBox>
   </children>

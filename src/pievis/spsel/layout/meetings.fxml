@@ -51,8 +51,7 @@
                           <children>
                             <TextField fx:id="meetingTitleEditText" prefWidth="180.0" promptText="title" />
                             <TextField fx:id="meetingDateEditText" prefWidth="120.0" promptText="dd/mm/yyyy" />
-                            <Button onAction="#addNewMeeting"
-                                    fx:id="newBtn" alignment="CENTER_RIGHT" contentDisplay="CENTER" mnemonicParsing="false" text="Add new" />
+                            <Button fx:id="newBtn" alignment="CENTER_RIGHT" contentDisplay="CENTER" mnemonicParsing="false" onAction="#addNewMeeting" text="Add new" />
                           </children>
                           <padding>
                             <Insets bottom="5.0" top="5.0" />
@@ -108,11 +107,10 @@
                               <children>
                                 <VBox id="VBox" alignment="TOP_RIGHT" spacing="10.0">
                                   <children>
-                                    <Button fx:id="selectBtn" defaultButton="true" mnemonicParsing="false" text="Select a random person" />
+                                    <Button fx:id="selectBtn" defaultButton="true" mnemonicParsing="false" onAction="#onSelectBtnPressed" text="Select a random person" />
                                     <HBox id="HBox" alignment="CENTER" spacing="5.0">
                                       <children>
-                                        <Button fx:id="editBtn" mnemonicParsing="false" text="Edit" />
-                                        <Button fx:id="deleteBtn" cancelButton="false" mnemonicParsing="false" text="Delete" />
+                                        <Button fx:id="deleteBtn" mnemonicParsing="false" onAction="#deleteSelectedMeeting" text="Delete meeting" />
                                       </children>
                                     </HBox>
                                   </children>
